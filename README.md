@@ -2,7 +2,7 @@
 
 Fake news identification. Users and their posts credibility on Twitter
 
-# Members : 
+# Members 
 
 * Dascalu Ana 
 * Glodeanu Irina
