@@ -13,5 +13,5 @@ Fake news identification. Users and their posts credibility on Twitter
 
 # Coordinators
 * Conf. dr. Iftene Adrian
-* Lect.dr. Iftene Sorin
+* Prof.dr. Tiplea Ferucio Laurentiu
 
