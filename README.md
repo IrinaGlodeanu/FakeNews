@@ -19,6 +19,7 @@ Fake news identification. Users and their posts credibility on Twitter
 https://docs.google.com/document/d/1XaCVFFKSZG8TETB7yAAk0Lfo6ztjg3fr0YzwNlv5IC0/edit?usp=sharing
 
 # State-of-art
+https://github.com/IrinaGlodeanu/FakeNews/blob/master/Documents/State-of-art.pdf
 
 # Trello board:
 https://trello.com/b/568OmHmR/fake-news-taip-project
