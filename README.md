@@ -76,3 +76,5 @@ Restart the Redis server to make sure it is running:
  <br></br>
 To test the maven version (from cmd):
     > mvn -v
+    
+* Any IDE for java (IntelliJ,Eclipse...): 
