@@ -71,4 +71,8 @@ public class Tweet {
     public void setExternalSources(List<ExternalSource> externalSources) {
         this.externalSources = externalSources;
     }
+
+    public void printStatus() {
+        System.out.print("Status");
+    }
 }
