@@ -8,6 +8,7 @@ import java.util.List;
 @RedisHash("Tweet")
 public class Tweet {
 
+    private String id;
     private User author;
     private Date creationDate;
     private String text;
@@ -15,6 +16,14 @@ public class Tweet {
     private String targetPerson;
     private List<String> keywords;
     private List<ExternalSource> externalSources;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public User getAuthor() {
         return author;
