@@ -1,7 +1,7 @@
 package com.fakenews.controller;
 
 import com.fakenews.entities.Tweet;
-import com.fakenews.repository.TweetRepository;
+import com.fakenews.service.TweetService;
 import com.google.common.collect.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,17 +14,17 @@ import java.util.List;
 public class TweetController {
 
     @Autowired
-    private TweetRepository tweetRepository;
+    private TweetService tweetService;
 
     @GetMapping
     public ResponseEntity<List<Tweet>> getTweet() {
-        List<Tweet> result = Lists.newArrayList(tweetRepository.findAll());
+        List<Tweet> result = Lists.newArrayList(tweetService.findAll());
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     @PostMapping
     public ResponseEntity addTweet(@RequestBody Tweet tweet) {
-        tweetRepository.save(tweet);
+        tweetService.saveTweet(tweet);
         return new ResponseEntity(HttpStatus.CREATED);
     }
 }
