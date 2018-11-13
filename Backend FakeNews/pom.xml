@@ -82,7 +82,11 @@
 			<version>[6.8.21,)</version>
 			<scope>test</scope>
 		</dependency>
-
+		<dependency>
+			<groupId>aspectj</groupId>
+			<artifactId>aspectjweaver</artifactId>
+			<version>1.5.4</version>
+		</dependency>
 		<dependency>
 			<groupId>org.twitter4j</groupId>
 			<artifactId>twitter4j</artifactId>

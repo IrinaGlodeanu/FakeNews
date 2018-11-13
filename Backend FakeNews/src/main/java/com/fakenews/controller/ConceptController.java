@@ -23,10 +23,9 @@ public class ConceptController {
     private NLPService nlpService;
 
     @GetMapping
-    public ResponseEntity<List<Concept>> getConcept() throws IOException {
-//        List<Concept> result = Lists.newArrayList(conceptRepository.findAll());
-        nlpService.retrieveKeywords2();
-        return new ResponseEntity<>(HttpStatus.OK);
+    public ResponseEntity<List<Concept>> getConcept() {
+        List<Concept> result = Lists.newArrayList(conceptRepository.findAll());
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     @PostMapping
