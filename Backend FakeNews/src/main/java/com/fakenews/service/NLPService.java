@@ -8,6 +8,7 @@ import opennlp.tools.postag.POSTaggerME;
 import opennlp.tools.tokenize.WhitespaceTokenizer;
 import opennlp.tools.util.ObjectStream;
 import opennlp.tools.util.PlainTextByLineStream;
+import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.io.IOException;
@@ -15,6 +16,7 @@ import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
 
+@Service
 public class NLPService {
 
     public static final String input = "Pres. Trump, first lady Melania\n" +
@@ -50,11 +52,11 @@ public class NLPService {
     }
 
     public List<String> retrieveKeywords() throws IOException {
-        POSSample posSample = posTagging(input);
-        String[] tags = posSample.getTags();
-        String[] sentence = posSample.getSentence();
+            POSSample posSample = posTagging(input);
+            String[] tags = posSample.getTags();
+            String[] sentence = posSample.getSentence();
 
-        List<String> keywords = new ArrayList<>();
+            List<String> keywords = new ArrayList<>();
         for (int i=0; i<tags.length; i++){
             if(tags[i].startsWith("NN")){
                 keywords.add(sentence[i].replaceAll("[,]", ""));
@@ -63,8 +65,9 @@ public class NLPService {
         return keywords;
     }
 
-//    public static void main(String[] args) throws IOException {
-//        NLPService nlpService = new NLPService();
-//        System.out.println(nlpService.retrieveKeywords());
-//    }
+
+    public static void main(String[] args) throws IOException {
+        NLPService nlpService = new NLPService();
+        System.out.println(nlpService.retrieveKeywords());
+    }
 }

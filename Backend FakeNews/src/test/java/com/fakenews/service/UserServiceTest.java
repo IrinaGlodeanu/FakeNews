@@ -81,7 +81,7 @@ public class UserServiceTest {
 
         when(userRepository.save(userArgumentCaptor.capture())).thenReturn(user);
 
-        userService.saveTweet(user);
+        userService.save(user);
 
         User capturedUser = userArgumentCaptor.getValue();
 
