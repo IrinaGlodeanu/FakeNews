@@ -8,7 +8,7 @@ import java.util.List;
 @RedisHash("Tweet")
 public class Tweet {
 
-    private String id;
+    private long id;
     private User author;
     private LocalDateTime creationDate;
     private String text;
@@ -18,6 +18,20 @@ public class Tweet {
     private List<ExternalSource> externalSources;
     private Double trustDegree;
 
+    public Tweet(){
+
+    }
+
+    public Tweet(long id, LocalDateTime localDateTime, String text,
+                            String userName, Double trustDegree,
+                 Double nrOfExternalSources){
+        this.id=id;
+        creationDate=localDateTime ;
+        this.text=text;
+        author.setUsername(userName);
+        this.trustDegree=trustDegree;
+    }
+
     public boolean isFake() {
         return this.trustDegree < 0.5;
     }
@@ -26,11 +40,11 @@ public class Tweet {
         return !isFake();
     }
 
-    public String getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(long id) {
         this.id = id;
     }
 

@@ -87,7 +87,7 @@ class TweetServiceTest {
 
         Tweet tweet = new Tweet();
 
-        tweet.setId(UUID.randomUUID().toString());
+        tweet.setId(2);
         tweet.setAuthor(new User());
         tweet.setCreationDate(LocalDateTime.now());
         tweet.setTrustDegree(trustDegree);

@@ -38,7 +38,7 @@ public class UserService {
         return Lists.newArrayList(userRepository.findAll());
     }
 
-    public void saveTweet(User user) {
+    public void save(User user) {
         userRepository.save(user);
     }
 

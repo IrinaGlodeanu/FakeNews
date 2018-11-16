@@ -1,7 +1,7 @@
 package com.fakenews.controller;
 
 import com.fakenews.entities.User;
-import com.fakenews.repository.UserRepository;
+import com.fakenews.service.UserService;
 import com.google.common.collect.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,17 +14,17 @@ import java.util.List;
 public class UserController {
 
     @Autowired
-    private UserRepository userRepository;
+    private UserService userService;
 
     @GetMapping
     public ResponseEntity<List<User>> getUser() {
-        List<User> result = Lists.newArrayList(userRepository.findAll());
+        List<User> result = Lists.newArrayList(userService.findAll());
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     @PostMapping
     public ResponseEntity addUser(@RequestBody User user) {
-        userRepository.save(user);
+        userService.save(user);
         return new ResponseEntity(HttpStatus.CREATED);
     }
 }
