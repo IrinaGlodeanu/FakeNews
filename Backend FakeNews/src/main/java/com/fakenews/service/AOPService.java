@@ -21,7 +21,7 @@ public class AOPService {
     private SecurityService securityService;
 
     @Around("execution(* com.fakenews.service.UserService.save(..)))")
-    public void logceva(ProceedingJoinPoint joinPoint) throws Throwable {
+    public void encryptSensibleUserData(ProceedingJoinPoint joinPoint) throws Throwable {
         User user = (User) joinPoint.getArgs()[0];
 
         String hashedEmail = securityService.encryptString(user.getEmail());
