@@ -58,7 +58,7 @@ Restart the Redis server to make sure it is running:
 #### We'll use <b>Swagger </b> as a API documentation tool for our REST calls:
     
   After you execute the Back-end application, you have access to the Swagger endpoint:   
-    http://localhost:8080/swagger-ui.html
+    http://localhost:5000/swagger-ui.html
     <br></br>
     Here we'll have the endpoints to the exposed functionalities by our app.
    
