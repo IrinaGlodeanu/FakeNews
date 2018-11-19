@@ -10,7 +10,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/v1/concepts")
@@ -28,9 +30,20 @@ public class ConceptController {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<Optional<Concept>> getConceptById(String id) {
+        Optional<Concept> result = conceptRepository.findById(id);
+        List<Optional<Concept>> list = Lists.newArrayList(result);
+        System.out.println("here has begun in FindConceptById");
+        list.iterator().next();
+        return new ResponseEntity(result, HttpStatus.OK);
+    }
+
+
     @PostMapping
     public ResponseEntity addConcept(@RequestBody Concept concept) {
         conceptRepository.save(concept);
+        Optional<Concept> result = conceptRepository.findById("1");
         return new ResponseEntity(HttpStatus.CREATED);
     }
 }

@@ -1,0 +1,25 @@
+package mop;
+
+import java.io.*;
+import java.util.*;
+SafeFileWriter(FileWriter f) {
+
+	static int counter = 0;
+
+	int writes = 0;
+	event open(FileWriter f){
+		this.writes = 0;
+	}
+	event write(FileWriter f){
+		this.writes++;
+	}
+	event close(FileWriter f){
+	}
+	ere:  (open write write* close)*
+
+	@fail
+	{
+		System.err.println("The WRITE operation has been called after the file was closed !!!!!");
+		__RESET;
+	}
+}
