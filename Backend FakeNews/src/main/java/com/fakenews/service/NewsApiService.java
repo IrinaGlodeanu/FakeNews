@@ -4,15 +4,15 @@ import org.springframework.stereotype.Service;
 
 import java.io.*;
 @Service
-public class BadWordsBanService {
+public class NewsApiService {
 
-    public void writeBadWordsUserInFileAfterClose(String id) throws IOException {
-        File file = new File("BadWords.txt");
+    public void writeApiResponseInFileAfterClose(String id) throws IOException {
+        File file = new File("NewsApiResponse.txt");
 
         file.createNewFile();
 
         FileWriter writer = new FileWriter(file, true);
-
+        writer.append('\n');
         writer.write(id);
         writer.flush();
         writer.close();
@@ -25,20 +25,20 @@ public class BadWordsBanService {
     }
 
 
-    public void writeBadWordsUserInFile(String id) throws IOException {
-        File file = new File("BadWords.txt");
+    public void writeApiResponseInFile(String id) throws IOException {
+        File file = new File("NewsApiResponse.txt");
 
         file.createNewFile();
 
         FileWriter writer = new FileWriter(file, true);
-
+        writer.append('\n');
         writer.write(id);
         writer.flush();
         writer.close();
     }
 
     public void readFromFile() throws IOException {
-        File file = new File("Hello1.txt");
+        File file = new File("NewsApiResponse.txt");
 
         FileReader fr = new FileReader(file);
         char [] a = new char[50];
