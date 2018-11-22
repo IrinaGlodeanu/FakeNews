@@ -8,6 +8,7 @@ import java.util.List;
 @RedisHash("Tweet")
 public class Tweet {
 
+
     private long id;
     private User author;
     private LocalDateTime creationDate;

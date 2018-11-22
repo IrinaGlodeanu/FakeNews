@@ -19,7 +19,7 @@ import java.util.List;
 @Service
 public class NLPService {
 
-    public static final String input = "Pres. Trump, first lady Melania\n" +
+    public static final String testinput = "Pres. Trump, first lady Melania\n" +
             " Trump arrive in France\n" +
             " for ceremony marking centennial anniversary of the end of World War I.";
 
@@ -43,7 +43,7 @@ public class NLPService {
         String[] tags = tagger.tag(whitespaceTokenizerLine);
 
         POSSample sample = new POSSample(whitespaceTokenizerLine, tags);
-        System.out.println(sample.toString());
+//        System.out.println(sample.toString());
 
         perfMon.incrementCounter();
 
@@ -51,7 +51,7 @@ public class NLPService {
         return sample;
     }
 
-    public List<String> retrieveKeywords() throws IOException {
+    public List<String> retrieveKeywords(String input) throws IOException {
             POSSample posSample = posTagging(input);
             String[] tags = posSample.getTags();
             String[] sentence = posSample.getSentence();
@@ -68,6 +68,6 @@ public class NLPService {
 
     public static void main(String[] args) throws IOException {
         NLPService nlpService = new NLPService();
-        System.out.println(nlpService.retrieveKeywords());
+        System.out.println(nlpService.retrieveKeywords(testinput));
     }
 }
