@@ -1,52 +1,39 @@
 package com.fakenews.service;
 
+import com.fakenews.model.NewsResult;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.*;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.web.util.UriComponents;
+import org.springframework.web.util.UriComponentsBuilder;
 
-import java.io.*;
 @Service
 public class NewsApiService {
 
-    public void writeApiResponseInFileAfterClose(String id) throws IOException {
-        File file = new File("NewsApiResponse.txt");
+    @Autowired
+    private RestTemplate restTemplate;
 
-        file.createNewFile();
+    public NewsResult queryNews(String query) {
 
-        FileWriter writer = new FileWriter(file, true);
-        writer.append('\n');
-        writer.write(id);
-        writer.flush();
-        writer.close();
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
 
-        try {
-            writer.write("writeSomethingAfterClose");
-        }catch (Exception e){
-        // nu fac nimic ca sa se vada ca eroarea o arunca din MOP
-      }
+        String uri = UriComponentsBuilder
+                .fromHttpUrl("https://newsapi.org/v2/everything")
+                .queryParam("q", query)
+                .queryParam("sortBy", "relevancy")
+                .queryParam("apiKey", "4f4e19ab063e47538bacd4ee122f20cf")
+                .toUriString();
+
+        HttpEntity entity = new HttpEntity(headers);
+
+        ResponseEntity<NewsResult> response = restTemplate.exchange(uri, HttpMethod.GET, entity, NewsResult.class);
+
+        if(!response.getStatusCode().equals(HttpStatus.OK)) {
+            return null;
+        }
+
+        return response.getBody();
     }
-
-
-    public void writeApiResponseInFile(String id) throws IOException {
-        File file = new File("NewsApiResponse.txt");
-
-        file.createNewFile();
-
-        FileWriter writer = new FileWriter(file, true);
-        writer.append('\n');
-        writer.write(id);
-        writer.flush();
-        writer.close();
-    }
-
-    public void readFromFile() throws IOException {
-        File file = new File("NewsApiResponse.txt");
-
-        FileReader fr = new FileReader(file);
-        char [] a = new char[50];
-        fr.read(a);
-
-        for(char c : a)
-            System.out.print(c);
-        fr.close();
-    }
-
 }

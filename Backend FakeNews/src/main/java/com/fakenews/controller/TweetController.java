@@ -37,10 +37,10 @@ public class TweetController {
         List<Optional<Tweet>> list = Lists.newArrayList(result);
         System.out.println("here has begun in FindTweetById");
         Iterator<Optional<Tweet>> iterator = list.iterator();
-//        if (iterator.hasNext()){
-//            iterator.next();
-//        }
-        iterator.next();
+        if (iterator.hasNext()){
+            iterator.next();
+        }
+//        iterator.next();
         return new ResponseEntity(result, HttpStatus.OK);
     }
 }
