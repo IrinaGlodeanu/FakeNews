@@ -5,7 +5,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
 @Service
@@ -22,6 +21,7 @@ public class NewsApiService {
         String uri = UriComponentsBuilder
                 .fromHttpUrl("https://newsapi.org/v2/everything")
                 .queryParam("q", query)
+                .queryParam("language", "en")
                 .queryParam("sortBy", "relevancy")
                 .queryParam("apiKey", "4f4e19ab063e47538bacd4ee122f20cf")
                 .toUriString();
