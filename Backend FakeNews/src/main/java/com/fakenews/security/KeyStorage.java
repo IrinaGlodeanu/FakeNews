@@ -7,8 +7,8 @@ import java.security.spec.RSAPublicKeySpec;
 
 public class KeyStorage {
 
-    private static String PUBLIC_KEY_FILE = "\\pubk";
-    private static String PRIVATE_KEY_FILE = "\\pk";
+    private static String PUBLIC_KEY_FILE = "pbk.txt";
+    private static String PRIVATE_KEY_FILE = "pb.txt";
 
     public static void StoreKeys(BigInteger modulus, BigInteger encExp, BigInteger decExp) {
         RSAPrivateKeySpec privateKey = new RSAPrivateKeySpec(modulus, decExp);
