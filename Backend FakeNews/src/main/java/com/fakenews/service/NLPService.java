@@ -52,19 +52,18 @@ public class NLPService {
     }
 
     public List<String> retrieveKeywords(String input) throws IOException {
-            POSSample posSample = posTagging(input);
-            String[] tags = posSample.getTags();
-            String[] sentence = posSample.getSentence();
+        POSSample posSample = posTagging(input);
+        String[] tags = posSample.getTags();
+        String[] sentence = posSample.getSentence();
 
-            List<String> keywords = new ArrayList<>();
-        for (int i=0; i<tags.length; i++){
-            if(tags[i].startsWith("NN")){
+        List<String> keywords = new ArrayList<>();
+        for (int i = 0; i < tags.length; i++) {
+            if (tags[i].startsWith("NN")) {
                 keywords.add(sentence[i].replaceAll("[,]", ""));
             }
         }
         return keywords;
     }
-
 
     public static void main(String[] args) throws IOException {
         NLPService nlpService = new NLPService();
