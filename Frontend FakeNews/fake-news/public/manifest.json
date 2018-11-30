@@ -1,0 +1,18 @@
+{
+  "short_name": "Twitter Extension",
+  "name": "Twitter Extension",
+  "manifest_version": 2,
+  "description": "Fake News Extension.",
+  "permissions": [
+    "http://twitter.com/", "https://twitter.com/", "http://fakenews-env-1.p5ymp76gg5.eu-central-1.elasticbeanstalk.com/*",  "tabs", "activeTab", "storage"
+  ],
+  "browser_action": {
+    "default_title": "Twitter Extension"
+  },
+  "version": "1.0",
+  "icons": {
+    "128": "assets/icon-128.png",
+    "19": "assets/icon.png"
+  },
+  "content_security_policy": "script-src 'self' 'sha256-GgRxrVOKNdB4LrRsVPDSbzvfdV4UqglmviH9GoBJ5jk='; object-src 'self'"
+}
