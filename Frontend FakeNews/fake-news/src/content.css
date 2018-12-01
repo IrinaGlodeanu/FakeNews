@@ -1,0 +1,58 @@
+.classifier-style {
+    font-family: Roboto, sans-serif;
+    text-transform: capitalize;
+    padding: 3px 12px;
+    border-radius: 5px;
+    width: auto;
+    font-weight: 600;
+    font-size: 12px;
+    text-align: center;
+    margin-bottom: 3px;
+    transition: all 0.2s ease-in-out;
+    margin: 5px 5px 5px;
+    width: 8%;
+}
+
+.classifier-style.fake {
+    color: #EF5350;
+    border: 2px solid #EF5350;
+}
+
+.classifier-style.fake:hover {
+    color: #ffffff;
+    background: #EF5350;
+}
+
+.classifier-style.neutral {
+    color: #1da1f2;
+    border: 2px solid #1da1f2;
+}
+
+.classifier-style.neutral:hover {
+    color: #ffffff;
+    background: #1da1f2;
+}
+
+.classifier-style.true {
+    color: #43A047;
+    border: 2px solid #43A047;
+}
+
+.classifier-style.true:hover {
+    color: #ffffff;
+    background: #43A047;
+}
+
+.tweet>.context {
+    display: flex;
+    justify-content: flex-end;
+    text-align: center;
+    align-items: center;
+}
+
+.tweet>.context:first-child:nth-last-child(2), .tweet>.context:first-child:nth-last-child(2) ~ .tweet>.context  {
+    display: flex;
+    justify-content: flex-end;
+    text-align: center;
+    align-items: center;
+}

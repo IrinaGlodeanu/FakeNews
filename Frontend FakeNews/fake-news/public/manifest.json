@@ -4,15 +4,25 @@
   "manifest_version": 2,
   "description": "Fake News Extension.",
   "permissions": [
-    "http://twitter.com/", "https://twitter.com/", "http://fakenews-env-1.p5ymp76gg5.eu-central-1.elasticbeanstalk.com/*",  "tabs", "activeTab", "storage"
+    "http://twitter.com/", "https://twitter.com/", "http://fakenews-env-1.p5ymp76gg5.eu-central-1.elasticbeanstalk.com/*", "tabs"
   ],
-  "browser_action": {
-    "default_title": "Twitter Extension"
+  "browser_action": {},
+  "background": {
+    "scripts": ["app/background.js"],
+    "persistent": false
   },
   "version": "1.0",
   "icons": {
     "128": "assets/icon-128.png",
     "19": "assets/icon.png"
   },
+  "content_scripts" : [
+    {
+      "matches": [ "*://twitter.com/*" ],
+      "css": ["/static/css/app.css", "/static/css/content.css"],
+      "js": ["/static/js/0.chunk.js", "/static/js/content.js"],
+      "run_at": "document_end"
+    }
+  ],
   "content_security_policy": "script-src 'self' 'sha256-GgRxrVOKNdB4LrRsVPDSbzvfdV4UqglmviH9GoBJ5jk='; object-src 'self'"
 }

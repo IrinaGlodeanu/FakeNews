@@ -1,0 +1,1 @@
+export const url = 'http://fakenews-env-1.p5ymp76gg5.eu-central-1.elasticbeanstalk.com/api/v1/newsApi/getRelatedNewsWithStatus';
