@@ -1,5 +1,6 @@
 package com.fakenews.service;
 
+import org.springframework.stereotype.Service;
 import twitter4j.Status;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
@@ -11,6 +12,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Service
 public class TwitterOperationsService {
 
     private TwitterConnectionService twitterConnectionService;
