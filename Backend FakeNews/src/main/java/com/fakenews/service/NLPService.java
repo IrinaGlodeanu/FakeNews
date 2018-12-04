@@ -1,18 +1,13 @@
 package com.fakenews.service;
 
-import opennlp.tools.cmdline.PerformanceMonitor;
 import opennlp.tools.cmdline.postag.POSModelLoader;
 import opennlp.tools.postag.POSModel;
 import opennlp.tools.postag.POSSample;
 import opennlp.tools.postag.POSTaggerME;
-import opennlp.tools.tokenize.WhitespaceTokenizer;
-import opennlp.tools.util.ObjectStream;
-import opennlp.tools.util.PlainTextByLineStream;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,33 +17,27 @@ public class NLPService {
     public static final String testinput = "Pres. Trump, first lady Melania\n" +
             " Trump arrive in France\n" +
             " for ceremony marking centennial anniversary of the end of World War I.";
+    public static final String testinput2 = "How George H.W. Bush became Beijing's old friend in the White House https://cnn.it/2E65SnO" ;
 
+    private final POSModel model;
+
+    public NLPService() {
+        model = new POSModelLoader().load(new File("en-pos-maxent.bin"));
+    }
 
     public POSSample posTagging(String sentence) throws IOException {
 
-        POSModel model = new POSModelLoader().load(new File("en-pos-maxent.bin"));
-        PerformanceMonitor perfMon = new PerformanceMonitor(System.err, "sent");
         POSTaggerME tagger = new POSTaggerME(model);
 
-        ObjectStream<String> lineStream =
-                new PlainTextByLineStream(new StringReader(sentence));
+        String wholeText = sentence.replaceAll("\\r|\\n", " ");
 
-        perfMon.start();
-        String line, wholeText = "";
-        while ((line = lineStream.read()) != null) {
-            wholeText = wholeText + " " + line;
-        }
+        String regularExpression = "(((http|ftp|https):\\/\\/)?[\\w\\-_]+(\\.[\\w\\-_]+)+([\\w\\-\\.,@?^=%&amp;:/~\\+#]*[\\w\\-\\@?^=%&amp;/~\\+#])?)";
 
-        String whitespaceTokenizerLine[] = WhitespaceTokenizer.INSTANCE.tokenize(wholeText);
+        wholeText = wholeText.replaceAll(regularExpression, "");
+        String whitespaceTokenizerLine[] = wholeText.split("\\W+");
         String[] tags = tagger.tag(whitespaceTokenizerLine);
 
-        POSSample sample = new POSSample(whitespaceTokenizerLine, tags);
-//        System.out.println(sample.toString());
-
-        perfMon.incrementCounter();
-
-        perfMon.stopAndPrintFinalResult();
-        return sample;
+        return new POSSample(whitespaceTokenizerLine, tags);
     }
 
     public List<String> retrieveKeywords(String input) throws IOException {
@@ -57,9 +46,9 @@ public class NLPService {
         String[] sentence = posSample.getSentence();
 
         List<String> keywords = new ArrayList<>();
-        for (int i = 0; i < tags.length; i++) {
-            if (tags[i].startsWith("NN")) {
-                keywords.add(sentence[i].replaceAll("[,]", ""));
+        for (int i = 0; i < tags.length-1 ; i++) {
+            if (tags[i].startsWith("NN") && !sentence[i].startsWith("http") && !sentence[i].isEmpty()) {
+                keywords.add(sentence[i]);
             }
         }
         return keywords;
@@ -67,6 +56,6 @@ public class NLPService {
 
     public static void main(String[] args) throws IOException {
         NLPService nlpService = new NLPService();
-        System.out.println(nlpService.retrieveKeywords(testinput));
+        System.out.println(nlpService.retrieveKeywords(testinput2));
     }
 }
