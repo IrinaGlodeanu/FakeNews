@@ -11,6 +11,29 @@
     transition: all 0.2s ease-in-out;
     margin: 5px 5px 5px;
     width: 8%;
+    cursor: pointer;
+}
+
+.classifier-style .popup {
+    display: none;
+    width: 32%;
+    background-color: white;
+    color: #9E9E9E;
+    text-align: left;
+    border-radius: 6px;
+    padding: 10px;
+    -webkit-box-shadow: -1px 8px 57px -12px rgba(0,0,0,0.67);
+    -moz-box-shadow: -1px 8px 57px -12px rgba(0,0,0,0.67);
+    box-shadow: -1px 10px 57px -12px rgba(0,0,0,0.67);
+    position: absolute;
+    z-index: 1;
+    top: 51px;
+    left: 83%;
+    margin-left: -60px;
+}
+
+.classifier-style:hover .popup {
+    display: block;
 }
 
 .classifier-style.fake {
@@ -23,6 +46,26 @@
     background: #EF5350;
 }
 
+.classifier-style.fake-15 {
+    color: rgb(255, 96, 93);
+    border: 2px solid rgb(255, 96, 93);
+}
+
+.classifier-style.fake-15:hover {
+    color: #ffffff;
+    background: rgb(255, 96, 93);
+}
+
+.classifier-style.fake-30 {
+    color: rgb(250, 107, 104);
+    border: 2px solid rgb(250, 107, 104);
+}
+
+.classifier-style.fake-30:hover {
+    color: #ffffff;
+    background: rgb(250, 107, 104);
+}
+
 .classifier-style.neutral {
     color: #1da1f2;
     border: 2px solid #1da1f2;
@@ -33,12 +76,12 @@
     background: #1da1f2;
 }
 
-.classifier-style.unknown {
+.classifier-style.idk {
     color: #9E9E9E;
     border: 2px solid #9E9E9E;
 }
 
-.classifier-style.unknown:hover {
+.classifier-style.idk:hover {
     color: #ffffff;
     background: #9E9E9E;
 }
@@ -51,6 +94,26 @@
 .classifier-style.true:hover {
     color: #ffffff;
     background: #43A047;
+}
+
+.classifier-style.true-65 {
+    color: #A5D6A7;
+    border: 2px solid #A5D6A7;
+}
+
+.classifier-style.true-65:hover {
+    color: #ffffff;
+    background: #A5D6A7;
+}
+
+.classifier-style.true-80 {
+    color: #66BB6A;
+    border: 2px solid #66BB6A;
+}
+
+.classifier-style.true-80:hover {
+    color: #ffffff;
+    background: #66BB6A;
 }
 
 .tweet>.context {

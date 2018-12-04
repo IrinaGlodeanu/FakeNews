@@ -8,23 +8,24 @@ class Main extends Component {
         super(props);
 
         this.state = {
-            text: '',
-            previousText: ''
+            text: this.props.tweetData.tweetId === this.props.attr ? this.handleStatus() : "Idk",
+            previousText: this.props.tweetData.tweetId === this.props.attr ? this.handleStatus() : "Idk"
         }
 
         this.onMouseover = this.onMouseover.bind(this);
         this.onMouseout = this.onMouseout.bind(this);
         this.handleStatus = this.handleStatus.bind(this);
+        this.changeColor = this.changeColor.bind(this);
     }
 
-    componentDidMount() {
-        if(this.props.tweetData.tweetId === this.props.attr) {
-            this.setState({
-                text: this.handleStatus(),
-                previousText: this.handleStatus()
-            });
-        }
-    }
+    // componentDidMount() {
+    //     if(this.props.tweetData.tweetId === this.props.attr) {
+    //         this.setState({
+    //             text: this.handleStatus(),
+    //             previousText: this.handleStatus()
+    //         });
+    //     }
+    // }
 
     handleStatus() {
         if( this.props.tweetData.status > 50 ) {
@@ -36,8 +37,29 @@ class Main extends Component {
         }
     }
 
+    changeColor() {
+        if(this.props.tweetData.status >= 0 && this.props.tweetData.status < 15) {
+            return "";
+        } 
+        else if(this.props.tweetData.status >= 15 && this.props.tweetData.status < 30) {
+            return "fake-15";
+        }
+        else if(this.props.tweetData.status >= 30 && this.props.tweetData.status < 50) {
+            return "fake-30";
+        }
+        else if(this.props.tweetData.status > 50 && this.props.tweetData.status < 65) {
+            return "true-65";
+        }
+        else if(this.props.tweetData.status >= 65 && this.props.tweetData.status < 80) {
+            return "true-80";
+        }
+        else if(this.props.tweetData.status >= 80 && this.props.tweetData.status <= 100) {
+            return "";
+        }
+    }
+
     onMouseover(e) {
-        this.setState({text : this.props.tweetData.status + "%"})
+        this.setState({text : this.props.tweetData.tweetId === this.props.attr ? this.props.tweetData.status + "%" : "Idk"})
     }
 
     onMouseout(e) {
@@ -48,13 +70,15 @@ class Main extends Component {
         const { text } = this.state;
         return (
             <Fragment>
-                    <div className={"classifier-style " + this.state.previousText.toLowerCase()} onMouseEnter={this.onMouseover} onMouseLeave={this.onMouseout}>
+                    <div className={"classifier-style " + this.state.previousText.toLowerCase() + " " + this.changeColor()} onMouseEnter={this.onMouseover} onMouseLeave={this.onMouseout}>
                         { text }
+                        <span class="popup">Number of related news: {this.props.tweetData.numberOfRelatedNews}<br />Number of related publications: {this.props.tweetData.numberOfRelatedBigPublications}</span>
                     </div>  
             </Fragment>
         )
     }
 }
+
 
 const gambitGalleryIsInView = el => {
 	const scroll = window.scrollY || window.pageYOffset
@@ -74,6 +98,16 @@ const gambitGalleryIsInView = el => {
 		|| ( bounds.top <= viewport.bottom && bounds.top >= viewport.top );
 }
 
+const createList = (count, nrOfTweets) => {
+    let list = [];
+    for(let i = count; i < nrOfTweets; i++) {
+        let tweet = document.getElementsByClassName('js-stream-tweet')[i];
+        let attribute = tweet.getAttribute('data-tweet-id');
+        list.push(attribute);
+    }
+    return list;
+}
+
 const sendListOfId = (prev, counter, nrOfTweets) => {
     let list = [];
     const copyCounter = counter;
@@ -85,7 +119,8 @@ const sendListOfId = (prev, counter, nrOfTweets) => {
             let attribute = tweet.getAttribute('data-tweet-id');
             list.push(attribute);
         }
-        console.log(list);
+        console.log("My List:", list);
+
         list = [];
         prev = counter;
 
@@ -99,10 +134,12 @@ const sendListOfId = (prev, counter, nrOfTweets) => {
 
 setTimeout(() => {
     let nrOfTweets = document.getElementsByClassName('js-stream-tweet').length;
-    let counter = 5;
+    //let counter = 5;
+    let myList = [];
     console.log(nrOfTweets);
 
-    sendListOfId(0, counter, nrOfTweets);
+    //sendListOfId(0, counter, nrOfTweets);
+    myList = createList(0, nrOfTweets);
 
     let tweetVisible = document.getElementsByClassName('js-stream-tweet')[nrOfTweets - 1];
     let ok = 0;
@@ -112,7 +149,22 @@ setTimeout(() => {
             let tweetNr = document.getElementsByClassName('js-stream-tweet').length;
             console.log(nrOfTweets , tweetNr);
             if(nrOfTweets < tweetNr) {
-                sendListOfId(nrOfTweets, counter, tweetNr);
+                // sendListOfId(nrOfTweets, counter, tweetNr);
+                myList = createList(nrOfTweets, tweetNr);
+                let copyList = [];
+                for(let i = 0; i < myList.length; i++) {
+                    copyList.push(myList[i]);
+                    
+                    if(copyList.length === 5) {
+                        console.log(copyList);
+                        copyList = []
+                    }
+
+                    if(copyList.length < 5 && i === myList.length - 1 ){
+                        console.log(copyList);
+                        copyList = []
+                    }
+                }
                 ok = 1;
                 tweetVisible = document.getElementsByClassName('js-stream-tweet')[tweetNr - 1];
                 nrOfTweets = tweetNr;
@@ -121,8 +173,28 @@ setTimeout(() => {
             ok = 0;
         }
     }
-    
-    window.addEventListener( 'scroll', handler )
+
+    let copyList = [];
+    for(let i = 0; i < myList.length; i++) {
+        copyList.push(myList[i]);
+        if((copyList.length === 3) || (copyList.length < 3 && i === myList.length - 1 )) {
+            send(copyList, (tweetData) => {
+                console.log(tweetData);
+                for(let j = 0; j < tweetData.length; j++) {
+                    const tweet = document.getElementsByClassName('tweet')[i-2+j];
+                    let attribute = tweet.getAttribute('data-tweet-id');
+                    const app =  document.getElementsByClassName('context')[i-2+j];
+                    app.id = "context-id";
+                    ReactDOM.render(<Main tweetData={tweetData[j]} attr={attribute} />, app);
+                }
+            })
+            copyList = [];
+        } 
+    }
+
+
+    window.addEventListener( 'scroll', handler );
+
 }, 1000);
 
 
@@ -132,6 +204,20 @@ const data = () => {
             }).then(response => response.json())
             .then(json => json)
             .catch(error => error);
+}
+
+const send = (list, callback) => {
+    fetch("http://fakenews-env-1.p5ymp76gg5.eu-central-1.elasticbeanstalk.com/api/v1/newsApi/batchStatus", {
+            method: 'POST',
+            headers: {
+                "Content-Type": "application/json; charset=utf-8"
+            },
+            body: JSON.stringify({
+                "listOfIds": list
+              })
+            }).then(response => response.json())
+            .then(json => callback(json))
+            .catch(error => console.log("Error", error));
 }
 
 // data().then((tweetData) => {
