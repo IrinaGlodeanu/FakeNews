@@ -35,6 +35,9 @@ public class NewsApiController {
     @Autowired
     private NLPService nlpService;
 
+    @Autowired
+    private TwitterOperationsService twitterOperationsService;
+
     static final List<String> whitelist = Arrays.asList("cnn", "nbc", "cbs","aol", "nasa", "forbes", "bbc", "abc", "washington",  "wall street", "wsj");//"times",
 
     private TwitterOperationsService twitterService = new TwitterOperationsService();
@@ -158,5 +161,21 @@ public class NewsApiController {
             statusForTweet+=0.5;
         }
         return new TweetResponse(idTweet, (statusForTweet < 100.0) ? statusForTweet : 100.0 , sisterNews.size(), nofBigPubs);
+    }
+
+    
+    @GetMapping("/getUserTweetsAndStatusByUsername")
+    public ResponseEntity<List<TweetResponse>> getUserTweetsAndStatusByUsername(String username) {
+        ArrayList<TweetResponse> result = new ArrayList<TweetResponse>();
+        List<Status> list = twitterOperationsService.getAUsersTimelineByUsername(username);
+
+        for (Status status: list) {
+            TweetResponse tweetResponse = new TweetResponse();
+            tweetResponse.setTweetId(String.valueOf(status.getId()));
+            tweetResponse.setStatus(20);
+            result.add(tweetResponse);
+        }
+
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 }
