@@ -4,10 +4,12 @@ import opennlp.tools.cmdline.postag.POSModelLoader;
 import opennlp.tools.postag.POSModel;
 import opennlp.tools.postag.POSSample;
 import opennlp.tools.postag.POSTaggerME;
+import org.apache.commons.io.FileUtils;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,7 +24,17 @@ public class NLPService {
     private final POSModel model;
 
     public NLPService() {
-        model = new POSModelLoader().load(new File("en-pos-maxent.bin"));
+
+        InputStream resourceAsStream = NLPService.class.getClassLoader().getResourceAsStream("com/fakenews/service/en-pos-maxent.bin");
+
+        File file = new File("file.tmp");
+        try {
+            FileUtils.copyInputStreamToFile(resourceAsStream, file);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        model = new POSModelLoader().load(file);
     }
 
     public POSSample posTagging(String sentence) throws IOException {
@@ -52,10 +64,5 @@ public class NLPService {
             }
         }
         return keywords;
-    }
-
-    public static void main(String[] args) throws IOException {
-        NLPService nlpService = new NLPService();
-        System.out.println(nlpService.retrieveKeywords(testinput2));
     }
 }

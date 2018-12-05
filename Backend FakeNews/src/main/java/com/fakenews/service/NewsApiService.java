@@ -64,7 +64,7 @@ public class NewsApiService {
 
         UriComponentsBuilder uri = UriComponentsBuilder
                 .fromHttpUrl("http://eventregistry.org/api/v1/article/getArticles")
-                .queryParam("apiKey", "32c46f6d-955f-46fa-8844-b0c301563a46")
+                .queryParam("apiKey", "edfe352c-2f1f-4b3d-ade5-6e5924b17854")
                 .queryParam("resultType", "articles")
                 .queryParam("articlesSortBy", "rel")
                 .queryParam("dateStart", LocalDate.now().minusDays(5).toString())

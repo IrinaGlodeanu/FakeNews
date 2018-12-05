@@ -90,7 +90,6 @@ public class NewsApiController {
 
     }
 
-
     @PostMapping("/batchStatus")
     public List<TweetResponse> returnStatusForBatchIds(@RequestBody TwitterTimelineRequest request) throws ExecutionException, InterruptedException {
 
@@ -136,13 +135,6 @@ public class NewsApiController {
         }
 
         List<Result> sisterNews = service.queryNews2(keywords);
-//            System.out.println( "-----------------------\n" + tweet.getText()+ "\n" + tweet.getUser().getName() + " \n-----------------------");
-
-
-//        List<Result> bigPubs = sisterNews.stream()
-//                .filter(sn -> remainingWhitelisters.stream().parallel().anyMatch(sn.getUri()::contains))
-//                .collect(Collectors.toList());
-
 
         Integer nofBigPubs = 0;
         for (Result rs : sisterNews){
@@ -154,12 +146,9 @@ public class NewsApiController {
             }
         }
 
-
         for (Result rs : sisterNews){
-//                System.out.println("\n-----------------------\nSource:" + rs.getSource().getUri() + "\nTitle: "  + rs.getTitle() + "\nBody : " + rs.getBody());
             for (String whitelister : remainingWhitelisters){
                 if (rs.getSource().getUri().contains(whitelister)){
-//                        System.out.println("a scris si" + whitelister +"\n");
                     statusForTweet+=4;
                 }
                 if (statusForTweet>80.0){
@@ -170,6 +159,4 @@ public class NewsApiController {
         }
         return new TweetResponse(idTweet, (statusForTweet < 100.0) ? statusForTweet : 100.0 , sisterNews.size(), nofBigPubs);
     }
-
-
 }
