@@ -4,10 +4,7 @@ import twitter4j.Status;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
 
-import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -25,6 +22,13 @@ public class TwitterOperationsService {
         return twitter.getHomeTimeline().stream()
                 .map(item -> item.getText())
                 .collect(Collectors.toList());
+    }
+
+    public Status getTweetById(long id) throws TwitterException {
+        Twitter twitter = twitterConnectionService.getTwitterInstance();
+
+        return twitter.showStatus(id);
+
     }
 
     public List<Status> getAUsersTimelineByUsername(String username) {

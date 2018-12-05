@@ -2,22 +2,31 @@ package com.fakenews.model;
 
 public class Source {
 
-    private String id;
-    private String name;
+    private String uri;
+    private String dataType;
+    private String title;
 
-    public String getId() {
-        return id;
+    public String getUri() {
+        return uri;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setUri(String uri) {
+        this.uri = uri;
     }
 
-    public String getName() {
-        return name;
+    public String getDataType() {
+        return dataType;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setDataType(String dataType) {
+        this.dataType = dataType;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 }
