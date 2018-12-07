@@ -35,6 +35,9 @@ public class NewsApiController {
     @Autowired
     private NLPService nlpService;
 
+    @Autowired
+    private TwitterOperationsService twitterOperationsService;
+
     static final List<String> whitelist = Arrays.asList("cnn", "nbc", "cbs","aol", "nasa", "forbes", "bbc", "abc", "washington",  "wall street", "wsj");//"times",
 
     private TwitterOperationsService twitterService = new TwitterOperationsService();
