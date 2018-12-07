@@ -159,4 +159,20 @@ public class NewsApiController {
         }
         return new TweetResponse(idTweet, (statusForTweet < 100.0) ? statusForTweet : 100.0 , sisterNews.size(), nofBigPubs);
     }
+
+    
+    @GetMapping("/getUserTweetsAndStatusByUsername")
+    public ResponseEntity<List<TweetResponse>> getUserTweetsAndStatusByUsername(String username) {
+        ArrayList<TweetResponse> result = new ArrayList<TweetResponse>();
+        List<Status> list = twitterOperationsService.getAUsersTimelineByUsername(username);
+
+        for (Status status: list) {
+            TweetResponse tweetResponse = new TweetResponse();
+            tweetResponse.setTweetId(String.valueOf(status.getId()));
+            tweetResponse.setStatus(20.0);
+            result.add(tweetResponse);
+        }
+
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
 }
