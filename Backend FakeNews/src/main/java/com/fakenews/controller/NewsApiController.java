@@ -1,11 +1,12 @@
 package com.fakenews.controller;
 
-import com.fakenews.model.NewsResult;
+import com.fakenews.entities.Tweet;
 import com.fakenews.model.Result;
 import com.fakenews.model.TweetResponse;
 import com.fakenews.model.TwitterTimelineRequest;
 import com.fakenews.service.NLPService;
 import com.fakenews.service.NewsApiService;
+import com.fakenews.service.TweetService;
 import com.fakenews.service.TwitterOperationsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,11 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import twitter4j.Status;
 import twitter4j.TwitterException;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
@@ -30,7 +27,7 @@ import static java.lang.Long.parseLong;
 public class NewsApiController {
 
     @Autowired
-    private NewsApiService service;
+    private NewsApiService newsApiService;
 
     @Autowired
     private NLPService nlpService;
@@ -38,59 +35,33 @@ public class NewsApiController {
     @Autowired
     private TwitterOperationsService twitterOperationsService;
 
+    @Autowired
+    private TweetService tweetService;
+
     static final List<String> whitelist = Arrays.asList("cnn", "nbc", "cbs","aol", "nasa", "forbes", "bbc", "abc", "washington",  "wall street", "wsj");//"times",
 
-    private TwitterOperationsService twitterService = new TwitterOperationsService();
-
-    @GetMapping
-    public ResponseEntity<NewsResult> searchNewsBySomeWords(@RequestParam("query") String query) {
-
-        return new ResponseEntity<>(service.queryNews(query), HttpStatus.OK);
-    }
-
     @GetMapping("/getRelatedNews")
-    public ResponseEntity<List<NewsResult>> getRelatedNews(@RequestParam("twitterText") String twitterText) throws IOException {
-
-        List<String> keyWords = nlpService.retrieveKeywords(twitterText);
-        List<NewsResult> newsResult = new ArrayList<>();
-
-        for (String keyword : keyWords) {
-            if (Character.isUpperCase(keyword.charAt(0))) {
-                newsResult.add(service.queryNews(keyword));
-            }
-        }
-        return new ResponseEntity<>(newsResult, HttpStatus.OK);
+    public ResponseEntity<List<Result>> getRelatedNews2(@RequestParam("twitterText") List<String> twitterText) {
+        return new ResponseEntity<>(newsApiService.getNewsByKeywords(twitterText), HttpStatus.OK);
     }
 
-    @GetMapping("/getRelatedNews2")
-    public ResponseEntity<List<Result>> getRelatedNews2(@RequestParam("twitterText") List<String> twitterText) throws IOException {
-
-
-        return new ResponseEntity<>(service.queryNews2(twitterText), HttpStatus.OK);
-    }
-
-    @GetMapping("/getRelatedNewsWithStatus")
-        public List<TweetResponse> getRelatedNewsWithStatus() throws TwitterException {
+    @GetMapping("/getRelatedNewsWithAZeroStatus")
+        public List<TweetResponse> getRelatedNewsWithAZeroStatus() throws TwitterException {
         List<Status> timeLineTweets =
-                twitterService.getTimeLineTweets();
+                twitterOperationsService.getTimeLineTweets();
 
         List<TweetResponse> responseList = new ArrayList<>();
 
         for (Status tweet : timeLineTweets) {
-            TweetResponse response = new TweetResponse();
-            response.setTweetId(String.valueOf(tweet.getId()));
-            response.setStatus(0.0);
-
-            for (String whitelister : whitelist) {
-                if (tweet.getUser().getName().toLowerCase().contains(whitelister)) {
-                    response.setStatus(50.0);
-                    break;
-                }
-            }
+            TweetResponse response = new TweetResponse(String.valueOf(tweet.getId()), 0.0, 0, 0);
             responseList.add(response);
         }
         return responseList;
+    }
 
+    @PutMapping("/updateStatusForTweet")
+    public TweetResponse updateStatusForTweet(String idOfTweet) {
+        return computeScoreForTweet(idOfTweet, true);
     }
 
     @PostMapping("/batchStatus")
@@ -98,7 +69,7 @@ public class NewsApiController {
 
         List<CompletableFuture<TweetResponse>> allFutures = request.getListOfIds()
                 .stream()
-                .map(id -> CompletableFuture.supplyAsync(() -> computeScoreForTweet(id)))
+                .map(id -> CompletableFuture.supplyAsync(() -> computeScoreForTweet(id, false)))
                 .collect(Collectors.toList());
 
         return CompletableFuture.allOf(allFutures.toArray(new CompletableFuture[allFutures.size()]))
@@ -109,46 +80,46 @@ public class NewsApiController {
                 .get();
     }
 
-    private TweetResponse computeScoreForTweet(String idTweet) {
+    private TweetResponse computeScoreForTweet(String idTweet, boolean isUpdate) {
+
+
+        Optional<Tweet> cachedOptionalTweet = tweetService.findById(idTweet);
+        if(!isUpdate){
+            if (cachedOptionalTweet.isPresent()){
+                Tweet cachedTweet = cachedOptionalTweet.get();
+                return new TweetResponse(String.valueOf(cachedTweet.getId()), cachedTweet.getTrustDegree(), cachedTweet.getNumberOfRelatedNews(), cachedTweet.getNumberOfRelatedBigPublications() );
+            }
+        }
+
         Double statusForTweet = 0.0;
 
-        Status tweet = null;
+        Status tweet ;
         try {
-            tweet = twitterService.getTweetById(parseLong(idTweet));
+            tweet = twitterOperationsService.getTweetById(parseLong(idTweet));
         } catch (TwitterException e) {
             return new TweetResponse(idTweet, -1.0, 0,0);
         }
 
         List<String> remainingWhitelisters = new ArrayList<>(whitelist);
 
+        statusForTweet = assignFiftyPercentToWhitelisers(statusForTweet, tweet, remainingWhitelisters);
 
-        for (String whitelister : whitelist) {
-            if (tweet.getUser().getName().toLowerCase().contains(whitelister)) {
-                statusForTweet = 50.0;
-                remainingWhitelisters.remove(whitelister);
-                break;
-            }
-        }
+        List<String> keywords = nlpService.retrieveKeywords(tweet.getText());
 
-        List<String> keywords = null;
-        try {
-            keywords = nlpService.retrieveKeywords(tweet.getText());
-        } catch (IOException e) {
-            return new TweetResponse(idTweet, -1.0, 0, 0);
-        }
+        List<Result> sisterNews = newsApiService.getNewsByKeywords(keywords);
 
-        List<Result> sisterNews = service.queryNews2(keywords);
+        Integer nofBigPubs = getNumberOfBigPublications(remainingWhitelisters, sisterNews);
 
-        Integer nofBigPubs = 0;
-        for (Result rs : sisterNews){
-            for (String whitelister : remainingWhitelisters){
-                if (rs.getSource().getUri().contains(whitelister)) {
+        statusForTweet = computeScoreAfterOtherFoundNews(statusForTweet, remainingWhitelisters, sisterNews);
 
-                    nofBigPubs++;
-                }
-            }
-        }
+        Tweet newTweet = new Tweet(idTweet, (statusForTweet < 100.0) ? statusForTweet : 100.0 , sisterNews.size(), nofBigPubs);
 
+        tweetService.saveTweet(newTweet);
+
+        return new TweetResponse(idTweet, (statusForTweet < 100.0) ? statusForTweet : 100.0 , sisterNews.size(), nofBigPubs);
+    }
+
+    private Double computeScoreAfterOtherFoundNews(Double statusForTweet, List<String> remainingWhitelisters, List<Result> sisterNews) {
         for (Result rs : sisterNews){
             for (String whitelister : remainingWhitelisters){
                 if (rs.getSource().getUri().contains(whitelister)){
@@ -160,22 +131,42 @@ public class NewsApiController {
             }
             statusForTweet+=0.5;
         }
-        return new TweetResponse(idTweet, (statusForTweet < 100.0) ? statusForTweet : 100.0 , sisterNews.size(), nofBigPubs);
+        return statusForTweet;
     }
 
-    
+    private Double assignFiftyPercentToWhitelisers(Double statusForTweet, Status tweet, List<String> remainingWhitelisters) {
+        for (String whitelister : whitelist) {
+            if (tweet.getUser().getName().toLowerCase().contains(whitelister)) {
+                statusForTweet = 50.0;
+                remainingWhitelisters.remove(whitelister);
+                break;
+            }
+        }
+        return statusForTweet;
+    }
+
+    private Integer getNumberOfBigPublications(List<String> remainingWhitelisters, List<Result> sisterNews) {
+        Integer nofBigPubs = 0;
+        for (Result rs : sisterNews){
+            for (String whitelister : remainingWhitelisters){
+                if (rs.getSource().getUri().contains(whitelister)) {
+                    nofBigPubs++;
+                }
+            }
+        }
+        return nofBigPubs;
+    }
+
+
     @GetMapping("/getUserTweetsAndStatusByUsername")
     public ResponseEntity<List<TweetResponse>> getUserTweetsAndStatusByUsername(String username) {
         ArrayList<TweetResponse> result = new ArrayList<TweetResponse>();
         List<Status> list = twitterOperationsService.getAUsersTimelineByUsername(username);
-
-        for (Status status: list) {
-            TweetResponse tweetResponse = new TweetResponse();
-            tweetResponse.setTweetId(String.valueOf(status.getId()));
-            tweetResponse.setStatus(20.0);
+        for (Status tweet: list) {
+            String idTweet = String.valueOf(tweet.getId());
+            TweetResponse tweetResponse = computeScoreForTweet(idTweet, false);
             result.add(tweetResponse);
         }
-
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 }

@@ -57,7 +57,7 @@ public class NewsApiService {
     }
 
 
-    public List<Result> queryNews2(List<String> query) {
+    public List<Result> getNewsByKeywords(List<String> query) {
 
         HttpHeaders headers = new HttpHeaders();
         headers.set("Accept", MediaType.APPLICATION_JSON_VALUE);
