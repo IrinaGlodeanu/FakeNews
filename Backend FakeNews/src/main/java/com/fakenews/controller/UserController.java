@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import twitter4j.Status;
 
 import java.util.List;
 
@@ -28,5 +27,11 @@ public class UserController {
     public ResponseEntity addUser(@RequestBody User user) {
         userService.save(user);
         return new ResponseEntity(HttpStatus.CREATED);
+    }
+
+    @DeleteMapping
+    public ResponseEntity deleteAll(){
+        userService.deleteAll();
+        return new ResponseEntity(HttpStatus.GONE);
     }
 }

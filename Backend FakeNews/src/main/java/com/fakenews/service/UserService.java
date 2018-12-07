@@ -1,7 +1,5 @@
 package com.fakenews.service;
-import com.fakenews.entities.Tweet;
 import com.fakenews.entities.User;
-import com.fakenews.repository.TweetRepository;
 import com.fakenews.repository.UserRepository;
 import com.google.common.collect.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +38,10 @@ public class UserService {
 
     public void save(User user) {
         userRepository.save(user);
+    }
+
+    public void deleteAll() {
+        userRepository.deleteAll();
     }
 
 }

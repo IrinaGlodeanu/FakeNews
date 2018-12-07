@@ -37,7 +37,7 @@ public class NLPService {
         model = new POSModelLoader().load(file);
     }
 
-    public POSSample posTagging(String sentence) throws IOException {
+    public POSSample posTagging(String sentence) {
 
         POSTaggerME tagger = new POSTaggerME(model);
 
@@ -52,14 +52,14 @@ public class NLPService {
         return new POSSample(whitespaceTokenizerLine, tags);
     }
 
-    public List<String> retrieveKeywords(String input) throws IOException {
+    public List<String> retrieveKeywords(String input) {
         POSSample posSample = posTagging(input);
         String[] tags = posSample.getTags();
         String[] sentence = posSample.getSentence();
 
         List<String> keywords = new ArrayList<>();
         for (int i = 0; i < tags.length-1 ; i++) {
-            if (tags[i].startsWith("NN") && !sentence[i].startsWith("http") && !sentence[i].isEmpty()) {
+            if (tags[i].startsWith("NN") && !sentence[i].isEmpty()) {
                 keywords.add(sentence[i]);
             }
         }

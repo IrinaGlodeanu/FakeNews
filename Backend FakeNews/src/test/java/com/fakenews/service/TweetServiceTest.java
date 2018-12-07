@@ -1,7 +1,6 @@
 package com.fakenews.service;
 
 import com.fakenews.entities.Tweet;
-import com.fakenews.entities.User;
 import com.fakenews.repository.TweetRepository;
 import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.BeforeEach;
@@ -14,12 +13,10 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 
-import java.time.LocalDateTime;
 import java.util.List;
-import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 @MockitoSettings(strictness = Strictness.LENIENT)
@@ -87,9 +84,7 @@ class TweetServiceTest {
 
         Tweet tweet = new Tweet();
 
-        tweet.setId(2);
-        tweet.setAuthor(new User());
-        tweet.setCreationDate(LocalDateTime.now());
+        tweet.setId("2");
         tweet.setTrustDegree(trustDegree);
 
         return tweet;
