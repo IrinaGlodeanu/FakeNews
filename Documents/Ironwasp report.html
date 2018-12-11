@@ -1,0 +1,631 @@
+
+<html>
+<head>
+<title>IronWASP Security Analysis Report</title>
+<style>
+body
+{
+    font-family: Palatino, "Palatino Linotype", "Palatino LT STD", "Book Antiqua", Georgia, serif;
+    margin: 0px;
+    padding: 0px;
+    background-color: #555;
+    overflow: auto;
+}
+#report_header
+{
+    background-color: #75D1FF;
+    margin-bottom: 10px;
+}
+#report_title
+{
+    background-color: #555;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    font-size: xx-large;
+    color: #FFF;
+    text-align: center;
+}
+#report_sub_title
+{
+    padding-top: 5px;
+    padding-bottom: 5px;
+    color: #555;
+    text-align: center;
+}
+#report_sub_title a
+{
+    color: #555;
+    font-weight: bold;
+}
+#report_footer
+{
+    color: #FFF;
+    text-align: center;
+    font-size: small;
+    padding-bottom: 10px;
+}
+.report
+{    
+     width: 1000px;
+     margin-left: 250px;
+     color: #FFF;
+}
+#overview
+{
+    color: #333;
+     background-color: #FFF;
+     border-style: outset;
+     border-color: #555;
+     padding: 20px;
+     margin: 10px;
+     overflow: auto;
+}
+#index
+{
+    color: #333;
+    background-color: #FFF;
+    border-style: outset;
+    border-color: #555;
+    padding: 20px;
+    margin: 10px;
+    overflow: auto;
+}
+#index a
+{
+    text-decoration: none;
+}
+#index ul
+{
+    list-style-type: square;
+}
+#index ul li
+{
+    padding-top: 15px;
+    padding-bottom: 3px;
+}
+#index ol li
+{
+    padding: 3px;
+}
+.index_finding_url
+{
+    color: #333;
+}
+.section_title
+{
+    color: #555;
+    border-color: #75D1FF;;
+    border-style: solid;
+    border-width: thick;
+    background-color: #75D1FF;;
+    padding: 10px;
+    margin: 10px;
+    margin-top: 20px;
+    font-size: x-large;
+    font-weight: bold;
+    overflow: auto;
+}
+.finding
+{
+    color: #333;
+     background-color: #FFF;
+     border-style: outset;
+     border-color: #555;
+     padding: 20px;
+     margin: 10px;
+     overflow: auto;
+}
+.finding table
+{
+    padding: 5px;
+    margin: 5px;
+    margin-left: 20px;
+}
+.finding td
+{
+    margin-left: 10px;
+}
+
+.trigger
+{
+    color: #333;
+    border-style: ridge;
+    border-color: #AAA;
+    margin: 10px;
+    padding: 10px;
+    overflow: auto;
+}
+.trigger_desc
+{
+    margin-top: 20px;
+    text-align: center;
+    color: #50D;
+}
+#quick_nav
+{
+    position: fixed;
+    width: 230px;
+    overflow: auto;
+}
+
+#quick_nav a
+{
+    color: #000;
+    text-decoration: none;
+}
+
+#quick_nav a:hover
+{
+    color: #75D1FF;
+}
+.quick_nav_link
+{
+    width: 220px;
+    background-color: #FFF;
+    padding: 2px;
+    padding-left: 5px; 
+    margin: 2px;
+    margin-top: 5px;
+}
+.host
+{
+    color: #555;
+    border-color: #75D1FF;;
+    border-style: solid;
+    border-width: thick;
+    background-color: #75D1FF;
+    padding: 10px;
+    margin: 10px;
+    margin-top: 20px;
+    font-size: x-large;
+    font-weight: bold;
+    overflow: auto;
+}
+.high_finding_title
+{
+    background-color: red;
+    color: #FFF;
+    font-size: large;
+    font-weight: bold;
+    padding: 10px;
+    margin-bottom: 10px;
+    overflow: auto;
+}
+.medium_finding_title
+{
+    background-color: orange;
+    color: #000;
+    font-size: large;
+    font-weight: bold;
+    padding: 10px;
+    margin-bottom: 10px;
+    overflow: auto;
+}
+.low_finding_title
+{
+    background-color: yellow;
+    color: #000;
+    font-size: large;
+    font-weight: bold;
+    padding: 10px;
+    margin-bottom: 10px;
+    overflow: auto;
+}
+.info_finding_title
+{
+    background-color: blue;
+    color: #FFF;
+    font-size: large;
+    font-weight: bold;
+    padding: 10px;
+    margin-bottom: 10px;
+    overflow: auto;
+}
+.lead_finding_title
+{
+    background-color: green;
+    color: #FFF;
+    font-size: large;
+    font-weight: bold;
+    padding: 10px;
+    margin-bottom: 10px;
+    overflow: auto;
+}
+.affected_url
+{
+    color: #0077FF;
+    text-decoration: underline;
+    overflow: auto;
+}
+.reason_title
+{
+    background-color: #3C3;
+    padding: 3px;
+    margin-top: 10px;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+.finding_nav_links
+{
+    color: #75D1FF;
+}
+.finding_nav_links a
+{
+    font-weight: bold;
+    color: #75D1FF;
+    text-decoration: none;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 1px;
+    padding-bottom: 1px;
+    margin: 10px;
+    margin-left: 0px;
+    border-color: #75D1FF;
+    border-style: solid;
+    border-width: 1px;
+}
+.finding_nav_links a:hover
+{
+    color: #FFF;
+    text-decoration: none;
+    background-color: #75D1FF;
+}
+.host_nav_links
+{
+    color: #75D1FF;
+}
+.host_nav_links a
+{
+    font-weight: bold;
+    color: #75D1FF;
+    text-decoration: none;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-top: 1px;
+    padding-bottom: 1px;
+    margin: 10px;
+    border-color: #75D1FF;
+    border-style: solid;
+    border-width: 1px;
+
+}
+.host_nav_links a:hover
+{
+    color: #FFF;
+    text-decoration: none;
+    background-color: #75D1FF;
+}
+
+.desc
+{
+    margin-top: 15px;
+    margin-bottom: 15px;
+    overflow: auto;
+}
+.desc_title
+{
+    font-weight: bold;
+    padding-bottom: 10px;
+    text-decoration: underline;
+}
+.reason
+{
+    margin-top: 15px;
+    margin-bottom: 15px;
+    overflow: auto;
+}
+.reason_section_title
+{
+    font-weight: bold;
+    padding-bottom: 10px;
+    text-decoration: underline;
+}
+.fpa_check
+{
+    margin-top: 10px;
+    margin-bottom: 10px;
+    overflow: auto;
+}
+.fpa_check_title
+{
+    font-weight: bold;
+    padding-bottom: 5px;
+    text-decoration: underline;
+    color: #3C3;
+}
+th
+{
+    background-color: #75D1FF;
+    color: #555;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    text-align: center;
+}
+.t_high
+{
+    color:  #FF0000;
+    border-style: none;
+    font-weight: bold;
+    text-align: center;
+}
+.t_med
+{
+    color:  #FF9900;
+    border-style: none;
+    font-weight: bold;
+    text-align: center;
+}
+.t_low
+{
+    color:  #B8B800;
+    border-style: none;
+    font-weight: bold;
+    text-align: center;
+}
+.t_info
+{
+    color: #0099FF;
+    border-style: none;
+    font-weight: bold;
+    text-align: center;
+}
+.t_lead
+{
+    color: #339933;
+    border-style: none;
+    font-weight: bold;
+    text-align: center;
+}
+.t_total
+{
+    color: #000;
+    border-style: none;
+    font-weight: bold;
+    text-align: center;
+}
+.t_high_conf
+{
+    background-color: #000;
+    color: #FFF;
+    margin-bottom: 20px;
+    text-align: center;
+}
+.t_med_conf
+{
+    background-color: #444;
+    color: #AAA;
+    margin-bottom: 20px;
+    text-align: center;
+}
+.t_low_conf
+{
+    background-color: #999;
+    color: #333;
+    margin-bottom: 20px;
+    text-align: center;
+            
+}
+.t_host
+{
+    width: 400px;
+    color: #0077FF;
+    text-decoration: underline;
+    text-align: left;
+    overflow: auto;
+}
+
+.legend
+{
+    font-size: small;
+}
+.legend td
+{
+    font-size: small;
+}
+
+.icr { color: red; }
+.icb { color: #0077FF; }
+.icy { color: #B8B800; }
+.ico { color: orange; }
+.icg { color: #3C3; }
+
+.hlr { background-color: red; }
+.hlb { background-color: #0077FF; }
+.hly { background-color: #B8B800; }
+.hlo { background-color: orange; }
+.hlg { background-color: #3C3; }
+    
+.ihh {font-weight: bold; color: #0077FF; text-decoration: underline;}
+.fname {font-weight: bold; }
+</style>
+</head>
+<body>
+<div id='report_header'>
+<div id='report_title'>IronWASP Security Analysis Report</div>
+<div id='report_sub_title'>Report based on the analysis performed by the open source web security software, <a href='https://ironwasp.org'>IronWASP</a></div>
+</div>
+
+
+<span id='quick_nav'>
+    <a href='#overview'><div class='quick_nav_link'>Overview</div></a>
+    <a href='#index'><div class='quick_nav_link'>Index</div></a>
+
+<a href='#host1'><div class='quick_nav_link'>http://fakenews-env-1.p5ymp76gg5.eu-central-1.elasticbeanstalk.com/</div></a>
+</span>
+
+
+<div class='report'>
+<div class='section_title'>Overview</div>
+<div id='overview'>
+This report contains the list of security findings discovered by IronWASP. The current section of the report gives a brief overview of the number of different findings, the numbers are categorized by the hosts they were discovered on.
+<br>
+The index section contains the names of all the findings. The sections after that show details of every individual finding.
+<br><br>
+The table below shows the number of findings discovered in each host. The findings are seperated based on their type and severity.<br>
+<br><br>
+<div class='legend'>
+<div class='fname'>Legend:</div>
+<br>
+<table cellpadding='0' cellspacing='0'>
+<tr><td align='right'><span class='icr'><b>High</b></span></td> <td>&nbsp;&nbsp;&nbsp;&nbsp;High Severity Vulnerability</td></tr>
+<tr><td align='right'><span class='ico'><b>Medium</b></span></td> <td>&nbsp;&nbsp;&nbsp;&nbsp;Medium Severity Vulnerability</td></tr>
+<tr><td align='right'><span class='icy'><b>Low</b></span></td> <td>&nbsp;&nbsp;&nbsp;&nbsp;Low Severity Vulnerability</td></tr>
+<tr><td align='right'><span class='icb'><b>Info</b></span></td> <td>&nbsp;&nbsp;&nbsp;&nbsp;Information Findings</td></tr>
+<tr><td align='right'><span class='icg'><b>Test Leads</b></span></td> <td>&nbsp;&nbsp;&nbsp;&nbsp;Things of interest for manual testing</td></tr>
+</table>
+<br>
+The High, Medium and Low severity vulnerability numbers are also split based on the confidence with which IronWASP has reported them.<br>
+<br>
+<span class='t_high_conf'>&nbsp;&nbsp;0&nbsp;&nbsp;</span>&nbsp;&nbsp;&nbsp; High Confidence &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<span class='t_med_conf'>&nbsp;&nbsp;0&nbsp;&nbsp;</span>&nbsp;&nbsp;&nbsp; Medium Confidence &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<span class='t_low_conf'>&nbsp;&nbsp;0&nbsp;&nbsp;</span>&nbsp;&nbsp;&nbsp; Low Confidence &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</div>
+<br>
+
+<table cellpadding='0' cellspacing='0'>
+<tr>
+    <th width='100' >High</th>
+    <th width='20'> </th>
+    <th width='100'>Medium</th>
+    <th width='20'> </th>
+    <th width='100'>Low</th>
+    <th width='100'>Info</th>
+    <th width='100'>Test leads</th>
+    <th width='20'> </th>
+    <th width='30'>Total</th>
+    <th width='30'> </th>
+    <th width='400'>Hosts</th>
+</tr>
+<tr>
+    <td height='20px'></td>
+</tr>
+
+<tr>
+            <td>
+                <div class='t_high'>0</div>
+            </td>
+            <td></td>
+            <td>
+                <div class='t_med'>0</div>
+            </td>
+            <td></td>
+            <td>
+                <div class='t_low'>1</div>
+            </td>
+            <td>
+                <div class='t_info'>1</div>
+            </td>
+            <td><div class='t_lead'>0</div></td>
+            <td></td>
+            <td><div class='t_total'>2</div></td>
+            <td></td>            
+            <td><div class='t_host'>http://fakenews-env-1.p5ymp76gg5.eu-central-1.elasticbeanstalk.com/</div></td>
+        </tr>
+<tr>
+            <td>
+                <table cellpadding='0' cellspacing='0'>
+                    <tr>
+                        <td width='30'><div class='t_high_conf'>0</div></td>
+                        <td width='30'><div class='t_med_conf'>0</div></td>
+                        <td width='30'><div class='t_low_conf'>0</div></td>
+                    </tr>
+                </table>
+            </td>
+            <td></td>
+<td>
+                <table cellpadding='0' cellspacing='0'>
+                    <tr>
+                        <td width='30'><div class='t_high_conf'>0</div></td>
+                        <td width='30'><div class='t_med_conf'>0</div></td>
+                        <td width='30'><div class='t_low_conf'>0</div></td>
+                    </tr>
+                </table>
+            </td>
+            <td></td>
+<td>
+                <table cellpadding='0' cellspacing='0'>
+                    <tr>
+                        <td width='30'><div class='t_high_conf'>1</div></td>
+                        <td width='30'><div class='t_med_conf'>0</div></td>
+                        <td width='30'><div class='t_low_conf'>0</div></td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+</table>
+</div>
+<div class='section_title'>Index</div>
+<div id='index'>
+The titles of all the findings are listed below categorized by the host they were discovered on. All items in the list below are links to relevant sections in the report.
+<br>
+
+<a href='#host1'><div class='host'>http://fakenews-env-1.p5ymp76gg5.eu-central-1.elasticbeanstalk.com/</div></a>
+<ul>
+
+
+
+
+
+
+<li><a href='#finding1'><span class='icy'>Server leaks version number</span></a></li>
+<ol>
+<li><a href='#finding1'><span class='index_finding_url'>/</span></a></li>
+</ol>
+
+
+
+<li><a href='#finding2'><span class='icb'>Runs on nginx/1.12.1</span></a></li>
+<ol>
+<li><a href='#finding2'><span class='index_finding_url'>/</span></a></li>
+</ol>
+
+
+</ul>
+</div>
+
+<div class='host' id='host1'>http://fakenews-env-1.p5ymp76gg5.eu-central-1.elasticbeanstalk.com/</div>
+<div class='host_nav_links'></div><div class='finding' id='finding1'>
+<div class='low_finding_title'>Server leaks version number</div>
+<div class='finding_nav_links'><a href='#finding2'>&gt;&gt;&gt;</a></div>
+<table cellpadding='2' cellspacing='2'>
+<tr><div class='type'><td><span class='fname'>Type:</td><td></span>Vulnerability</td></div></tr>
+<tr><div class='severity'><td><span class='fname'>Severity:</span></td><td><span class='icy'>Low</span></td></div></tr>
+<tr><div class='confidence'><td><span class='fname'>Confidence:</span></td><td>High</td></div>
+</tr>
+<tr><div class='type'><td><span class='fname'>Found By:</span></td><td>Passive Analysis</td></div></tr>
+</table>
+<br>
+<table cellpadding='2' cellspacing='2'>
+<tr><div class='affected_host'><td><span class='fname'>Affected Site:</span></td><td>http://fakenews-env-1.p5ymp76gg5.eu-central-1.elasticbeanstalk.com/</td></div></tr>
+<tr><div class='affected_url'><td><span class='fname'>Affected Url:</span></td><td><span class='affected_url'>/</span></td></div></tr>
+</table>
+<div class='desc'><div class='desc_title'>Description:</div>The Web Server's banner contains the version number of the server - nginx/1.12.1. The version number found is 1.12.1</div>
+<div class='trigger'>
+<span class='ihh'> Analyzed Response: </span><br><br><span class='icb'>The Server header of this Response indicates the server version as 1.12.1</span><br><br>HTTP/1.1 404 <br><span class='hlg'>Server: nginx/1.12.1</span><br><span class='icb'>[---- Snipped parts of HTTP headers section for brevity ----]</span><br>Content-Length: 104<br><br><br>
+</div>
+</div>
+<div class='finding' id='finding2'>
+<div class='info_finding_title'>Runs on nginx/1.12.1</div>
+<div class='finding_nav_links'><a href='#finding1'>&lt;&lt;&lt;</a></div>
+<table cellpadding='2' cellspacing='2'>
+<tr><div class='type'><td><span class='fname'>Type:</span></td><td><span class='icb'>Information</span></td></div></tr>
+<tr><div class='type'><td><span class='fname'>Found By:</span></td><td>Passive Analysis</td></div></tr>
+</table>
+<br>
+<table cellpadding='2' cellspacing='2'>
+<tr><div class='affected_host'><td><span class='fname'>Affected Site:</span></td><td>http://fakenews-env-1.p5ymp76gg5.eu-central-1.elasticbeanstalk.com/</td></div></tr>
+<tr><div class='affected_url'><td><span class='fname'>Affected Url:</span></td><td><span class='affected_url'>/</span></td></div></tr>
+</table>
+<div class='desc'><div class='desc_title'>Description:</div>The Web Server returned this banner in its response headers - nginx/1.12.1</div>
+<div class='trigger'>
+<span class='ihh'> Analyzed Response: </span><br><br>HTTP/1.1 404 <br><span class='hlg'>Server: nginx/1.12.1</span><br><span class='icb'>[---- Snipped parts of HTTP headers section for brevity ----]</span><br>Content-Length: 104<br><br><br>
+</div>
+</div>
+</div>
+
+<div id='report_footer'>
+    This report was generated by IronWASP's Reporting Engine on Monday, December 10, 2018 at 20:52:49
+</div>
+
+</body></html>
+
