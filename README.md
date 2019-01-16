@@ -15,13 +15,17 @@ Fake news identification. Users and their posts credibility on Twitter
 * Conf. dr. Iftene Adrian
 * Prof.dr. Tiplea Ferucio Laurentiu
 
-# Documentation:
+# Article, technical report:
+https://docs.google.com/document/d/1-FMRT5jqxmpqwqiwidUkiL7LmgVsT6YN8MhbI-jsQt0/edit?usp=sharing
+
+
+## Documentation:
 https://docs.google.com/document/d/1XaCVFFKSZG8TETB7yAAk0Lfo6ztjg3fr0YzwNlv5IC0/edit?usp=sharing
 
-# State-of-art
+## State-of-art
 https://github.com/IrinaGlodeanu/FakeNews/blob/master/Documents/State-of-art.pdf
 
-# Trello board:
+## Trello board:
 https://trello.com/b/568OmHmR/fake-news-taip-project
 
 
